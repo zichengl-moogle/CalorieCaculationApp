@@ -1,0 +1,74 @@
+[
+  {
+    "recipe_id": "demo:chicken-salad-1",
+    "title": "Chicken Salad (Demo)",
+    "url": "https://example.com/chicken-salad",
+    "servings": 2,
+    "total_kcal": 478.6,
+    "per_serving_kcal": 239.3,
+    "total_cost_usd": 2.948988880699206,
+    "per_serving_cost_usd": 1.474494440349603,
+    "breakdown": [
+      {
+        "name": "chicken breast",
+        "quantity_g": 200.0,
+        "kcal_per_100g": 165.0,
+        "kcal": 330.0,
+        "price_per_g": 0.01199314706285734,
+        "cost_usd": 2.3986294125714682
+      },
+      {
+        "name": "green pepper",
+        "quantity_g": 80.0,
+        "kcal_per_100g": 20.0,
+        "kcal": 16.0,
+        "price_per_g": 0.005004493351596721,
+        "cost_usd": 0.4003594681277377
+      },
+      {
+        "name": "olive oil",
+        "quantity_g": 15.0,
+        "kcal_per_100g": 884.0,
+        "kcal": 132.6,
+        "price_per_g": 0.01,
+        "cost_usd": 0.15
+      }
+    ]
+  },
+  {
+    "recipe_id": "demo:spicy-green-chili-1",
+    "title": "Spicy Green Chili (Demo)",
+    "url": "https://example.com/green-chili",
+    "servings": 3,
+    "total_kcal": 379.35,
+    "per_serving_kcal": 126.45,
+    "total_cost_usd": 3.3820013330471146,
+    "per_serving_cost_usd": 1.1273337776823715,
+    "breakdown": [
+      {
+        "name": "green chili pepper",
+        "quantity_g": 150.0,
+        "kcal_per_100g": 40.0,
+        "kcal": 60.0,
+        "price_per_g": 0.007716179176470715,
+        "cost_usd": 1.1574268764706073
+      },
+      {
+        "name": "garlic",
+        "quantity_g": 15.0,
+        "kcal_per_100g": 149.0,
+        "kcal": 22.35,
+        "price_per_g": 0.004387199017479064,
+        "cost_usd": 0.06580798526218595
+      },
+      {
+        "name": "chicken breast",
+        "quantity_g": 180.0,
+        "kcal_per_100g": 165.0,
+        "kcal": 297.0,
+        "price_per_g": 0.01199314706285734,
+        "cost_usd": 2.1587664713143213
+      }
+    ]
+  }
+]
