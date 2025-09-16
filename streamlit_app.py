@@ -65,7 +65,7 @@ def _run_search_and_go_results():
 
 # ---------- HOME ----------
 if st.session_state["page"] == "home":
-    st.title("🥗 Calorie & Cost Finder – Demo")
+    st.title("🥗 Calorie & Cost Finder")
 
     st.session_state["query"] = st.text_input(
         "Search recipes by dish name",
