@@ -1,11 +1,11 @@
+# user_interface.py
 import re
 from typing import Any, Dict
 from scraper_recipe import scrape_recipes
 
-MIN_ALPHA = 3  # 至少要有3个字母（中文等非拉丁字符也算“字母”见下面逻辑）
+MIN_ALPHA = 3
 
 def _count_letters(s: str) -> int:
-    # 统计“看起来像字母/文字”的字符：包含中文、日文等
     return sum(ch.isalpha() for ch in s)
 
 def _count_digits(s: str) -> int:
@@ -15,26 +15,17 @@ def is_likely_recipe_query(user_input: str) -> bool:
     if not user_input:
         return False
     s = user_input.strip()
-    # 太短、只有空格/标点
     if _count_letters(s) < MIN_ALPHA:
         return False
-    # 明显是纯数字或以数字为主
     if _count_digits(s) > _count_letters(s):
         return False
-    # 明显是URL
     if re.search(r"https?://", s, flags=re.I):
         return False
-    # 过长的一大段句子也判为不合格（MVP 先限制）
     if len(s) > 60:
         return False
     return True
 
 def handle_user_query(user_input: str, top_k: int = 5) -> Dict[str, Any]:
-    """
-    返回：
-      - 成功: {"ok": True, "recipes": [ {...}, ... ]}
-      - 失败: {"ok": False, "message": "...", "examples": [...]}
-    """
     q = (user_input or "").strip()
     if not is_likely_recipe_query(q):
         return {
@@ -43,7 +34,7 @@ def handle_user_query(user_input: str, top_k: int = 5) -> Dict[str, Any]:
             "examples": ["chicken salad", "beef noodle soup", "egg fried rice", "scrambled eggs"]
         }
 
-    recipes = scrape_recipes(q, top_k=top_k)  # 调用我们已有的Allrecipes爬虫
+    recipes = scrape_recipes(q, top_k=top_k)
     if not recipes:
         return {
             "ok": False,
@@ -59,7 +50,10 @@ def handle_user_query(user_input: str, top_k: int = 5) -> Dict[str, Any]:
             "servings": getattr(r, "servings", None),
             "calories_kcal_per_serving": (getattr(r, "meta", {}) or {}).get("calories_kcal_per_serving"),
             "ingredients": [
-                getattr(ing, "meta", {}).get("alias_raw") or getattr(ing, "name", None)
+                {
+                    "name": getattr(ing, "name", None),
+                    "quantity_g": getattr(ing, "quantity_g", None)
+                }
                 for ing in getattr(r, "ingredients", []) or []
             ]
         }
@@ -88,7 +82,9 @@ if __name__ == "__main__":
             print(f"Calories: {r['calories_kcal_per_serving']} kcal")
             print(f"Servings: {r['servings']}")
             print(f"Link: {r['url']}")
-            print("Ingredients:")
+            print("Ingredients (normalized):")
             for it in r["ingredients"]:
-                print("  -", it)
+                q = it["quantity_g"]
+                q_str = f"{q:.2f} g" if isinstance(q, (int,float)) else "N/A"
+                print(f"  - {it['name']}  [{q_str}]")
             print("=" * 60)
