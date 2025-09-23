@@ -6,14 +6,11 @@ from runner import run_once
 import sys
 import os
 
-# 检测是否在 Streamlit 运行时环境里
 def _is_streamlit_runtime() -> bool:
     try:
-        # 新版有 st.runtime.exists()
         import streamlit.runtime as rt  # type: ignore
         return getattr(rt, "exists", lambda: False)()
     except Exception:
-        # 退一步：Streamlit 启动时一般会设置这些环境变量之一
         return any(k in os.environ for k in ["STREAMLIT_SERVER_PORT", "STREAMLIT_BROWSER_GATHER_USAGE_STATS"])
 
 if not _is_streamlit_runtime():
@@ -28,17 +25,17 @@ try:
 except ImportError:
     raise SystemExit("Please install Streamlit: pip install streamlit")
 
-# ---------- 初始化 session_state ----------
+# ---------- Initialize session_state ----------
 st.session_state.setdefault("page", "home")          # "home" | "results"
 st.session_state.setdefault("query", "chicken")
 st.session_state.setdefault("use_cache", True)
 st.session_state.setdefault("results_path", None)
 st.session_state.setdefault("results_data", None)
 
-# ---------- 页面设置 ----------
+# ---------- Page Setting ----------
 st.set_page_config(page_title="Calorie & Cost Finder", page_icon="🥗", layout="centered")
 
-# ---------- Sidebar (两页共用) ----------
+# ---------- Sidebar ----------
 with st.sidebar:
     st.markdown("**Options**")
     st.session_state["use_cache"] = st.toggle(
