@@ -42,19 +42,25 @@ def handle_user_query(user_input: str, top_k: int = 5) -> Dict[str, Any]:
             "examples": [q.split()[0] if q.split() else "chicken", "salad", "noodles"]
         }
 
-    def _to_public_dict(r) -> Dict[str, Any]:
+    def _to_public_dict(r):
         return {
-            "id": getattr(r, "id", None),
-            "title": getattr(r, "title", None),
-            "url": getattr(r, "url", None),
-            "servings": getattr(r, "servings", None),
-            "calories_kcal_per_serving": (getattr(r, "meta", {}) or {}).get("calories_kcal_per_serving"),
+            "id": r.id,
+            "title": r.title,
+            "url": r.url,
+            "servings": r.servings,
+            "calories_kcal_per_serving": r.meta.get("calories_kcal_per_serving"),
             "ingredients": [
                 {
-                    "name": getattr(ing, "name", None),
-                    "quantity_g": getattr(ing, "quantity_g", None)
+                    "name": ing.name,
+                    "canonical_name": ing.canonical_name,
+                    "quantity_g": ing.quantity_g,
+                    "optional": ing.optional,
+                    "to_taste": ing.to_taste,
+                    "approx": ing.approx,
+                    "skip_for_kcal": ing.skip_for_kcal,
+                    "prep": ing.prep,
                 }
-                for ing in getattr(r, "ingredients", []) or []
+                for ing in r.ingredients
             ]
         }
 
@@ -85,6 +91,10 @@ if __name__ == "__main__":
             print("Ingredients (normalized):")
             for it in r["ingredients"]:
                 q = it["quantity_g"]
-                q_str = f"{q:.2f} g" if isinstance(q, (int,float)) else "N/A"
-                print(f"  - {it['name']}  [{q_str}]")
+                q_str = f"{q:.2f} g" if isinstance(q, (int,float)) else "0.00 g"
+                opt = " (optional)" if it.get("optional") else ""
+                tt  = " (to taste)" if it.get("to_taste") else ""
+                approx = " (approx)" if it.get("approx") else ""
+                print(f"  - {it['canonical_name']}  [{q_str}]{opt}{tt}{approx}")
             print("=" * 60)
+
