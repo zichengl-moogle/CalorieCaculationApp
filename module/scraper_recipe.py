@@ -1,4 +1,4 @@
-# scraper_recipe.py - enhanced version
+# scraper_recipe.py - enhanced version (each support + pre-scan weight + main outputs meta)
 from __future__ import annotations
 import re, json, time, random, hashlib
 from typing import List, Optional, Dict, Tuple
@@ -10,15 +10,15 @@ from dataclasses import dataclass, field
 # ================== Data models ==================
 @dataclass
 class Ingredient:
-    name: str                     # 清洗后的原名（小写）
-    canonical_name: str           # 规范名（用于检索/营养/价格）
-    quantity_g: Optional[float]   # 换算后的克（允许 0）
+    name: str                     # cleaned original name (lowercased)
+    canonical_name: str           # canonical name (for search/nutrition/price)
+    quantity_g: Optional[float]   # converted grams (0 allowed)
     optional: bool = False
     to_taste: bool = False
     approx: bool = False
     skip_for_kcal: bool = False
-    prep: str = ""                # chopped/minced/...（预处理信息）
-    meta: Dict[str, str] = field(default_factory=dict)
+    prep: str = ""                # chopped/minced/... (prep info)
+    meta: Dict[str, str] = field(default_factory=dict)  # meta includes each, why_zero, display_qty, etc.
 
 @dataclass
 class Recipe:
@@ -60,6 +60,7 @@ def _unique(seq):
 def search_allrecipes(query: str, top_k: int = 5) -> List[str]:
     url = f"{BASE}/search?q={quote_plus(query)}"
     html = _get(url)
+    # lxml is faster; if your environment doesn't have lxml installed, change to "html.parser"
     soup = BeautifulSoup(html, "lxml")
     urls = []
     for a in soup.find_all("a", href=True):
@@ -127,7 +128,7 @@ def _parse_ingredients_from_dom(soup: BeautifulSoup) -> List[str]:
         re.I
     )
     numeric_only_re = re.compile(r"^[\d\s¼½¾⅓⅔/.\-]+$")
-    punct_only_re = re.compile(r"^[\s\-\u2013\u2014\u2022=\.]+$")  # 只含分隔符/空白
+    punct_only_re = re.compile(r"^[\s\-\u2013\u2014\u2022=\.]+$")
     clean: List[str] = []
     seen = set()
     for raw in items:
@@ -176,13 +177,15 @@ UNIT_SYNONYMS = {
     "liter": "l", "liters": "l", "l": "l",
     "milliliter": "ml", "milliliters": "ml", "ml": "ml",
 
-    "clove": "clove", "cloves": "clove",
-    "leaf": "leaf", "leaves": "leaf",
-    "sprig": "sprig", "sprigs": "sprig",
-    "piece": "piece", "pieces": "piece",
+    # Count/per-piece → each (also includes common pieces / clove / slice, etc.)
+    "each": "each", "ea": "each", "count": "each",
+    "piece": "each", "pieces": "each",
+    "clove": "each", "cloves": "each",
+    "leaf": "each", "leaves": "each",
+    "sprig": "each", "sprigs": "each",
+    "slice": "each", "slices": "each",
 }
 
-# 质量单位（体积单位默认=水密度，后面会按食材覆盖）
 MASS_PER_UNIT = {
     "lb": 453.59237,
     "oz": 28.349523125,
@@ -192,56 +195,27 @@ MASS_PER_UNIT = {
     "l": 1000.0, "ml": 1.0,
 }
 
-# 体积→克：食材特异密度（匹配到则覆盖上面的 cup/tbsp/tsp）
+# Volume → grams: cover typical densities; if not covered, fall back to water density
 DENSITY_RULES = [
-    # 米类（未煮未洗堆密度）
     (re.compile(r"\b((glutinous|sweet|sticky)\s+rice|rice(?!\s+vinegar))\b", re.I),
         {"cup": 185.0, "tbsp": 185.0/16.0, "tsp": 185.0/48.0}),
-    # 油类
     (re.compile(r"\b(olive|vegetable|canola|peanut|sesame)\s+oil\b|\boil\b", re.I),
         {"cup": 218.0, "tbsp": 218.0/16.0, "tsp": 218.0/48.0}),
-    # broth/stock ≈ 水
     (re.compile(r"\b(broth|stock)\b", re.I),
         {"cup": 240.0, "tbsp": 15.0, "tsp": 5.0}),
-    # 糖
     (re.compile(r"\b(light\s+)?brown\s+sugar\b", re.I),
         {"cup": 220.0, "tbsp": 220.0/16.0, "tsp": 220.0/48.0}),
     (re.compile(r"\b(granulated)?\s*sugar\b", re.I),
         {"cup": 200.0, "tbsp": 200.0/16.0, "tsp": 200.0/48.0}),
 ]
 
-# 明确件数单位
-PIECE_HEURISTICS = [
-    (("garlic",), "clove", 3.0),
-    (("bay", "leaf"), "leaf", 0.2),
-    (("parsley",), "sprig", 1.0),
-]
-
-# 无单位时的“估重/个”
-ESTIMATED_WEIGHTS = {
-    "green onion": 15.0, "scallion": 15.0, "spring onion": 15.0,
-    "onion": 110.0,
-    "carrot": 60.0,
-    "egg": 50.0,
-    "mushroom": 18.0,
-    "potato": 150.0,
-    "tomato": 120.0,
-    "lemon": 65.0, "lime": 65.0,
-    "bell pepper": 120.0,
-    "hamburger bun": 50.0, "bun": 50.0,
-    "ginger": 10.0,  # 没有长度信息时按块估
-}
-
 SIZE_MULTIPLIER = {"small": 0.7, "large": 1.3, "extra large": 1.5}
-GINGER_G_PER_INCH = 5.5  # 2-inch piece ≈ 11 g
-
+GINGER_G_PER_INCH = 5.5
 PREP_WORDS = {
     "chopped","diced","minced","sliced","crushed","ground","grated","shredded",
     "beaten","peeled","seeded","deveined","rinsed","drained","softened","melted",
     "cubed","halved","julienned","thinly","thickly","coarsely","finely"
 }
-
-# 可选/随意用量标记
 OPTIONAL_PATTERNS = [
     ("optional", "optional"),
     ("to taste", "to_taste"),
@@ -253,8 +227,6 @@ OPTIONAL_PATTERNS = [
     ("for frying", "approx"),
     ("for brushing", "approx"),
 ]
-
-# 规范名同义
 SYNONYM_CANONICAL = {
     "scallions": "green onion",
     "scallion": "green onion",
@@ -276,6 +248,53 @@ def _vulgar_to_float(token: str) -> Optional[float]:
     try: return float(t)
     except ValueError: return None
 
+# ---------- New: pre-scan weight (parentheses / multiply sign / hyphen) ----------
+_WEIGHT_UNITS = r"(?:pounds?|lbs?|oz|ounces?|kg|g|fl\s*oz)"
+_PACK_RE  = re.compile(r"(?P<count>\d+(?:\.\d+)?)\s*[x×]\s*(?P<amt>\d+(?:\.\d+)?)\s*(?P<u>%s)" % _WEIGHT_UNITS, re.I)
+_PAREN_RE = re.compile(r"\(\s*(?P<amt>\d+(?:\.\d+)?)\s*(?P<u>%s)\s*\)" % _WEIGHT_UNITS, re.I)
+_HYPHEN_RE= re.compile(r"(?P<amt>\d+(?:\.\d+)?)\s*-\s*(?P<u>%s)\b" % _WEIGHT_UNITS, re.I)
+
+def _unit_to_g_simple(amount: float, unit: str) -> float:
+    u = unit.lower().replace(" ", "")
+    if   u in ("lb","lbs","pound","pounds"): return amount * 453.59237
+    elif u in ("oz","ounce","ounces"):       return amount * 28.349523125
+    elif u == "kg":                           return amount * 1000.0
+    elif u == "g":                            return amount
+    elif u in ("floz","floz"):                return amount * 29.5735  # volume approximation: water/oil
+    return 0.0
+
+def _preextract_weight_grams(line: str) -> float:
+    """Pre-check total grams for the whole line: 2x16 oz / (8 pound) / 8-pound, etc. Return >0 if hit, else 0."""
+    s = line.lower()
+
+    # 2 x 16 oz
+    m = _PACK_RE.search(s)
+    if m:
+        cnt = float(m.group("count")); amt = float(m.group("amt")); u = m.group("u")
+        g = _unit_to_g_simple(amt, u) * cnt
+        if g > 0: return g
+
+    # (8 pound)
+    m = _PAREN_RE.search(s)
+    if m:
+        amt = float(m.group("amt")); u = m.group("u")
+        g = _unit_to_g_simple(amt, u)
+        lead = re.match(r"^\s*(\d+(?:\.\d+)?)\b", s)  # leading count like "1 (8 pound)"
+        if lead: g *= float(lead.group(1))
+        if g > 0: return g
+
+    # 8-pound / 8-oz
+    m = _HYPHEN_RE.search(s)
+    if m:
+        amt = float(m.group("amt")); u = m.group("u")
+        g = _unit_to_g_simple(amt, u)
+        lead = re.match(r"^\s*(\d+(?:\.\d+)?)\b", s)
+        if lead: g *= float(lead.group(1))
+        if g > 0: return g
+
+    return 0.0
+# ---------- Pre-scan END ----------
+
 def _parse_quantity(text: str):
     """
     Return (qty, unit, remainder, paren_qty, paren_unit)
@@ -285,7 +304,7 @@ def _parse_quantity(text: str):
 
     qty = None; unit = None; paren_qty = None; paren_unit = None
 
-    # 括号规格 (10.5 ounce) / (4 pound) / (2 inch)
+    # (10.5 ounce) / (4 pound) / (2 inch)
     lead_paren = re.match(
         r"^[\s\-\u2013\u2014\u2022]*\(\s*(\d+(?:\.\d+)?|\d+\s*/\s*\d+|[¼½¾⅓⅔⅛⅜⅝⅞])\s*"
         r"(ounce|ounces|oz|pound|pounds|lb|lbs|g|kg|cup|cups|tbsp|tablespoon|tsp|teaspoon|inch|in|cm)\s*\)",
@@ -306,7 +325,7 @@ def _parse_quantity(text: str):
             paren_qty = _vulgar_to_float(q_raw); paren_unit = u_raw
             s = (s[:any_paren.start()] + " " + s[any_paren.end():]).strip()
 
-    # 数量：混合数 2 1/4 / 2 ¼，或单独 ½ / 2 / 2.5
+    # quantity: mixed number / single
     m_mix_numeric = re.match(r"^(\d+(?:\.\d+)?)\s+(\d+\s*/\s*\d+)\b", s)
     end = 0
     if m_mix_numeric:
@@ -318,13 +337,13 @@ def _parse_quantity(text: str):
             qty = float(m_mix_vulgar.group(1)) + (_vulgar_to_float(m_mix_vulgar.group(2)) or 0.0)
             end = m_mix_vulgar.end()
         else:
-            m_single = re.match(r"^([¼½¾⅓⅔⅛⅜⅝⅞]|\d+(?:\.\d+)?)", s)  # 支持 ½teaspoon 连写
+            m_single = re.match(r"^([¼½¾⅓⅔⅛⅜⅝⅞]|\d+(?:\.\d+)?)", s)  # supports concatenations like ½teaspoon
             if m_single:
                 qty = _vulgar_to_float(m_single.group(1))
                 end = m_single.end()
     s = s[end:].lstrip() if end else s
 
-    # 单位：第一词或“形容词 + 单位”（large cloves garlic）
+    # unit (including each/ea/count)
     unit_candidate = None
     parts = s.split()
     if parts:
@@ -348,11 +367,8 @@ def _density_for(name: str, unit: str) -> Optional[float]:
     return None
 
 def _canonicalize_name(name: str) -> Tuple[str, str, Dict[str, bool], str]:
-    """返回 canonical_name, cleaned_name, flags, prep"""
     n = name.lower().strip()
-    # 去括号
     n = re.sub(r"\([^)]*\)", " ", n)
-    # 标记可选/随意
     flags = {"optional": False, "to_taste": False, "approx": False, "skip_for_kcal": False}
     for phrase, key in OPTIONAL_PATTERNS:
         if phrase in n:
@@ -360,11 +376,9 @@ def _canonicalize_name(name: str) -> Tuple[str, str, Dict[str, bool], str]:
             if key in ("optional", "to_taste"):
                 flags["skip_for_kcal"] = True
             n = n.replace(phrase, " ")
-    # 去修饰
     n = re.sub(r"\b(extra\s+large|large|small|medium|fresh|prepared|unsalted|salted)\b", " ", n)
     n = re.sub(r"\bpieces?\b", " ", n)
 
-    # 提取切法等
     preps = []
     tokens = [t for t in re.split(r"\s+", n) if t]
     kept = []
@@ -376,25 +390,21 @@ def _canonicalize_name(name: str) -> Tuple[str, str, Dict[str, bool], str]:
     n2 = " ".join(kept).strip()
     n2 = re.sub(r"\s+", " ", n2)
 
-    # 规范名同义
     canonical = SYNONYM_CANONICAL.get(n2, n2)
     return canonical, n2, flags, " ".join(preps)
 
-def _match_estimate_key(name: str) -> Optional[Tuple[str, float]]:
-    # 优先匹配更长的 key，避免 'onion' 抢到 'green onion'
-    for key in sorted(ESTIMATED_WEIGHTS.keys(), key=lambda x: -len(x)):
-        if re.search(rf"\b{re.escape(key)}\b", name):
-            return key, ESTIMATED_WEIGHTS[key]
-    return None
-
 def _inch_to_g_for_item(name: str, inches: float) -> Optional[float]:
-    if "ginger" in name:    # 姜按长度估重
+    if "ginger" in name:
         return inches * GINGER_G_PER_INCH
     return None
 
 def _convert_to_grams(qty: Optional[float], unit: Optional[str], name: str,
                       pqty: Optional[float]=None, punit: Optional[str]=None) -> Optional[float]:
-    # 括号中的“inch/cm”专用（如姜）
+    # each: do not convert (handled by the each flow)
+    if unit == "each":
+        return None
+
+    # parentheses inch/cm (e.g., ginger)
     if pqty is not None and punit:
         if punit in ("inch","in","cm"):
             inches = pqty * (0.3937007874 if punit=="cm" else 1.0)
@@ -403,39 +413,18 @@ def _convert_to_grams(qty: Optional[float], unit: Optional[str], name: str,
                 count = qty if qty is not None else 1.0
                 return count * per
 
-    # 质量单位
+    # mass units
     if qty is not None and unit in ("lb","oz","kg","g"):
         return qty * MASS_PER_UNIT[unit]
 
-    # 体积单位：按食材密度表覆盖，否则按水密度
+    # volume units (covered by density table, otherwise water density)
     if qty is not None and unit in ("cup","tbsp","tsp","l","ml"):
         dens = _density_for(name, unit)
         if dens is None:
             dens = MASS_PER_UNIT[unit]
         return qty * dens
 
-    # 明确件数单位
-    if qty is not None and unit:
-        for keywords, piece_unit, grams_per in PIECE_HEURISTICS:
-            if unit == piece_unit and all(k in name for k in keywords):
-                return qty * grams_per
-        if unit == "piece":
-            est = _match_estimate_key(name)
-            if est:
-                key, grams_per = est
-                return qty * grams_per
-
-    # 无单位但有数量：按估重
-    if qty is not None and unit is None:
-        mult = 1.0
-        if "extra large" in name: mult = SIZE_MULTIPLIER["extra large"]
-        elif "large" in name:     mult = SIZE_MULTIPLIER["large"]
-        elif "small" in name:     mult = SIZE_MULTIPLIER["small"]
-        est = _match_estimate_key(name)
-        if est:
-            key, grams_per = est
-            return qty * grams_per * mult
-
+    # other cases: no weight estimation (handled by each or 0)
     return None
 
 def _normalize_ingredient_line(raw: str) -> Optional[Ingredient]:
@@ -444,18 +433,25 @@ def _normalize_ingredient_line(raw: str) -> Optional[Ingredient]:
     if not before_comma:
         return None
 
+    # ① pre-scan total weight for the whole line (handle 1 (8 pound) / 2x16 oz / 8-pound, etc.)
+    pre_g = _preextract_weight_grams(before_comma)
+
     qty, unit, rem, pqty, punit = _parse_quantity(before_comma)
 
-    # 规范化名字 + 标记
     canonical, cleaned_name, flags, prep = _canonicalize_name(rem)
     name_clean = cleaned_name.strip().lower()
     if not name_clean:
         return None
 
     grams = None
+    why_zero = ""
 
-    # (10.5 ounce) 这类包规格：count × 规格
-    if pqty is not None and punit and punit in UNIT_SYNONYMS:
+    # ② if pre-scan already got grams, use it directly
+    if pre_g > 0:
+        grams = pre_g
+
+    # package specs like (10.5 ounce): count × spec
+    if grams is None and pqty is not None and punit and punit in UNIT_SYNONYMS:
         base = MASS_PER_UNIT.get(UNIT_SYNONYMS[punit], None)
         if base:
             count = qty if qty is not None else 1.0
@@ -464,8 +460,42 @@ def _normalize_ingredient_line(raw: str) -> Optional[Ingredient]:
     if grams is None:
         grams = _convert_to_grams(qty, unit, name_clean, pqty, punit)
 
+    # each: do not convert to grams; record each_count
+    if (unit == "each") or (grams is None and (qty is not None and unit is None)):
+        piece_count = qty if qty is not None else 1.0
+        meta = {
+            "alias_raw": original,
+            "kept_before_comma": before_comma,
+            "quantity_parsed": "" if qty is None else str(qty),
+            "unit_parsed": unit or "",
+            "paren_quantity": "" if pqty is None else str(pqty),
+            "paren_unit": punit or "",
+            "name_parsed": name_clean,
+            "prep": prep,
+            "unit_canonical": "each",
+            "each_count": str(piece_count),
+            "display_qty": f"{piece_count} each",
+            "why_zero": "unit=each (by design not converted to grams)",
+        }
+        return Ingredient(
+            name=name_clean,
+            canonical_name=canonical,
+            quantity_g=0.0,
+            optional=flags["optional"],
+            to_taste=flags["to_taste"],
+            approx=flags["approx"],
+            skip_for_kcal=flags["skip_for_kcal"],
+            prep=prep,
+            meta=meta
+        )
+
+    # non-each: in grams
+    out_qty_g = 0.0
     if grams is None:
-        grams = 0.0  # 统一用 0
+        why_zero = "no conversion rule matched (qty/unit missing or unsupported)"
+        out_qty_g = 0.0
+    else:
+        out_qty_g = float(grams)
 
     meta = {
         "alias_raw": original,
@@ -475,12 +505,16 @@ def _normalize_ingredient_line(raw: str) -> Optional[Ingredient]:
         "paren_quantity": "" if pqty is None else str(pqty),
         "paren_unit": punit or "",
         "name_parsed": name_clean,
-        "prep": prep
+        "prep": prep,
+        "display_qty": f"{out_qty_g:.2f} g" if out_qty_g > 0 else "0 g",
     }
+    if out_qty_g == 0.0:
+        meta["why_zero"] = why_zero or "grams computed as 0"
+
     return Ingredient(
         name=name_clean,
         canonical_name=canonical,
-        quantity_g=round(float(grams), 2),
+        quantity_g=round(out_qty_g, 2),
         optional=flags["optional"],
         to_taste=flags["to_taste"],
         approx=flags["approx"],
@@ -536,5 +570,3 @@ def scrape_recipes(query: str, top_k: int = 5, _use_cache: bool = True) -> List[
         except Exception:
             continue
     return out
-
-
