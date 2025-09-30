@@ -56,7 +56,6 @@ streamlit_app.py           # Streamlit UI
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -U pip
-pip install lxml
 pip install -r requirements.txt  
 ```
 
