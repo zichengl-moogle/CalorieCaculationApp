@@ -196,9 +196,13 @@ def run_once(query: str, top_k: int = 5, use_cache: bool = True) -> str:
         results.append(compute_recipe_energy_and_cost(r))
 
     os.makedirs("data", exist_ok=True)
-    out_path = os.path.join("data", f"results_{re.sub(r'\\s+', '_', query.strip())}.json")
+
+    safe_query = re.sub(r'\s+', '_', query.strip())
+    out_path = os.path.join("data", f"results_{safe_query}.json")
+
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
+
     return out_path
 
 if __name__ == "__main__":
