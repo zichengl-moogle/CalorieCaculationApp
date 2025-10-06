@@ -36,7 +36,7 @@ The project emphasizes *pragmatic accuracy* (looks reasonable) and *responsivene
 Our app relies on the **Walmart engine from SerpAPI**, which is essentially a **third-party web-scraping API** rather than an official Walmart data interface.  
 As a result:
 
-- We use a **free-tier API key**, meaning the daily quota is extremely limited — typically **2–3 successful uses of app per day**.  
+- We use a **free-tier API key**, meaning the daily quota is extremely limited — typically **2–3 successful uses of app per day**.  (You can use "Chicken", "Fish" and "Potato" which are pre-cached queries.)
 - Once the quota is exhausted, subsequent price or calorie calculations will **return 0** until the quota resets.  
 
 These limitations reflect the **educational and experimental nature** of the project rather than production-grade reliability.
@@ -45,13 +45,25 @@ These limitations reflect the **educational and experimental nature** of the pro
 ## Project structure
 
 ```
-module/
-  scraper_recipe.py        # Scrapes Allrecipes; parses ingredients & units (g/each)
-  nutritionix_client.py    # Nutritionix API client (kcal_per_gram / kcal_per_each)
-  prices_walmart.py        # SerpAPI Walmart search -> (price, unit {'g'|'each'})
-  knowledgebase.py         # Ingredient alias map (canonical names)
-runner.py                  # End-to-end pipeline -> writes data/results_<query>.json
-streamlit_app.py           # Streamlit UI
+SmartBite/
+│
+├── main.py                     # Single entry point; launches Streamlit or runs pipeline
+├── streamlit_app.py            # Streamlit UI
+│
+├── module/
+│   ├── datasets.py             # Data models (Ingredient, Recipe)
+│   ├── scraper_recipe.py       # Scrape Allrecipes recipes & parse ingredient units
+│   ├── nutritioni_info.py   # Nutritionix API client (kcal_per_gram / kcal_per_each)
+│   ├── scraper_walmart.py       # SerpAPI Walmart search (price/unit)
+│   ├── knowledgebase.py        # Ingredient alias mapping
+│   ├── runner.py               # Orchestrates the pipeline
+│   ├── .env              # API keys for Nutritionix
+│   └── cache/                  # Persistent disk caches (auto-created)
+│       ├── .cache_nutritionix.json
+│       └── .cache_walmart.json
+│
+├── requirements.txt
+└── README.md
 ```
 
 ---
@@ -102,7 +114,7 @@ SERPAPI_API_KEY=your_serpapi_key
      - `each_count` (for *“3 eggs”*, *“1 bun”*), stored in `Ingredient.meta`.  
 
 2. **Fetch nutrition**  
-   - `nutritionix_client.kcal_per_gram(name)` and `nutritionix_client.kcal_per_each(name)` call Nutritionix API.  
+   - `nutrition_info.kcal_per_gram(name)` and `nutrition_info.kcal_per_each(name)` call Nutritionix API.  
    - If only one is available, infer `grams_per_each = kcal_per_each / kcal_per_gram`.  
 
 3. **Fetch prices**  
@@ -146,7 +158,7 @@ The UI shows a note when a **price unit mismatch** had to be bridged.
 
 ## Caching
 
-- `nutritionix_client` uses `functools.lru_cache`.  
+- `nutrition_info` uses `functools.lru_cache`.  
 - `runner.py` keeps small in-process dict caches for prices/nutrition during one run.  
 - Restarting clears caches.  
 
