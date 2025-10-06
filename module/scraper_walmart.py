@@ -226,6 +226,7 @@ def search_walmart(ingredient: str):
     try:
         print("Start Walmart search for:", ingredient)
         resp = serpapi_walmart_search(ingredient, num=1)
+        # print("Raw API response:", json.dumps(resp, indent=2)[:2000], "...\n")
         item = extract_first_item(resp)
         if not item:
             return (0.0, "g")
@@ -239,20 +240,17 @@ def search_walmart(ingredient: str):
             text_for_each = f"{title} {size_str}".lower()
             if re.search(r"\b(ea|each|count)\b", text_for_each):
                 return (price, "each")
-        # prices_walmart.py —— add the following validation around returning $/g inside search_walmart
-        MAX_PG = 0.10  # $/g upper bound; beyond this is considered abnormal
+        # prices_walmart.py —— add the following validation around returning $/g inside search_walmar
 
+        # If weight and total price exist → $/g
         # If weight and total price exist → $/g
         weight_g = parse_weight_to_g(size_str or title)
         if price is not None and weight_g > 0:
             pg = float(price) / weight_g
-            if 0 < pg <= MAX_PG:
-                return (pg, "g")
-            # Otherwise continue to ppu fallback
+            return (pg, "g")
+
+        # fallback to price per unit (ppu)
         val, unit = parse_ppu(item["ppu_raw"])
-        if unit == "g" and (val <= 0 or val > MAX_PG):
-            # Still unreasonable, set to 0
-            return (0.0, "g")
         return (val, unit)
 
 
@@ -261,6 +259,6 @@ def search_walmart(ingredient: str):
 
 
 if __name__ == "__main__":
-    for q in ["green bell pepper", "chicken breast", "egg", "olive oil", "rice"]:
+    for q in ["olive oil "]:
         price, unit = search_walmart(q)
         print(f"{q}: {price:.6f} USD/{unit}")
