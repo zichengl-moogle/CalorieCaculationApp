@@ -1,0 +1,731 @@
+{
+  "version": 1,
+  "data": {
+    "egg": {
+      "per_g": 1.43,
+      "per_each": 71.5,
+      "g_each": 50.0,
+      "ts": 1759774450
+    },
+    "onion": {
+      "per_g": 0.44,
+      "per_each": 41.36,
+      "g_each": 94.0,
+      "ts": 1759774451
+    },
+    "olive oil": {
+      "per_g": 8.84,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759774451
+    },
+    "chicken breast": {
+      "per_g": 1.65,
+      "per_each": 198.0,
+      "g_each": null,
+      "ts": 1759775501
+    },
+    "beef": {
+      "per_g": 2.59,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775501
+    },
+    "chicken thigh": {
+      "per_g": 2.14,
+      "per_each": 278.2,
+      "g_each": null,
+      "ts": 1759775501
+    },
+    "pork loin": {
+      "per_g": 1.92,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775502
+    },
+    "salmon": {
+      "per_g": 2.06,
+      "per_each": 733.36,
+      "g_each": null,
+      "ts": 1759775502
+    },
+    "shrimp": {
+      "per_g": 1.19,
+      "per_each": 26.18,
+      "g_each": 22.0,
+      "ts": 1759775502
+    },
+    "tofu": {
+      "per_g": 0.83,
+      "per_each": 377.65,
+      "g_each": null,
+      "ts": 1759775503
+    },
+    "butter": {
+      "per_g": 7.169718309859156,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775503
+    },
+    "milk": {
+      "per_g": 0.5,
+      "per_each": 122.0,
+      "g_each": null,
+      "ts": 1759775503
+    },
+    "yogurt": {
+      "per_g": 0.63,
+      "per_each": 107.1,
+      "g_each": null,
+      "ts": 1759775503
+    },
+    "cheddar cheese": {
+      "per_g": 4.0398589065255734,
+      "per_each": 113.11604938271606,
+      "g_each": 28.0,
+      "ts": 1759775503
+    },
+    "parmesan": {
+      "per_g": 4.2,
+      "per_each": 21.0,
+      "g_each": null,
+      "ts": 1759775503
+    },
+    "cream cheese": {
+      "per_g": 3.5,
+      "per_each": 50.75,
+      "g_each": null,
+      "ts": 1759775504
+    },
+    "sour cream": {
+      "per_g": 1.9800000000000002,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775504
+    },
+    "rice": {
+      "per_g": 1.3,
+      "per_each": 205.4,
+      "g_each": null,
+      "ts": 1759775504
+    },
+    "white rice": {
+      "per_g": 1.3,
+      "per_each": 205.4,
+      "g_each": null,
+      "ts": 1759775505
+    },
+    "brown rice": {
+      "per_g": 1.12,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775505
+    },
+    "bread": {
+      "per_g": 2.66,
+      "per_each": 77.14,
+      "g_each": 29.0,
+      "ts": 1759775505
+    },
+    "flour": {
+      "per_g": 3.64,
+      "per_each": 455.0,
+      "g_each": null,
+      "ts": 1759775506
+    },
+    "oats": {
+      "per_g": 3.7901234567901234,
+      "per_each": 307.0,
+      "g_each": null,
+      "ts": 1759775506
+    },
+    "spaghetti": {
+      "per_g": 1.5025714285714287,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775506
+    },
+    "quinoa": {
+      "per_g": 1.2,
+      "per_each": 222.0,
+      "g_each": null,
+      "ts": 1759775506
+    },
+    "garlic": {
+      "per_g": 1.49,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775507
+    },
+    "carrot": {
+      "per_g": 0.35000000000000003,
+      "per_each": 16.1,
+      "g_each": null,
+      "ts": 1759775507
+    },
+    "tomato": {
+      "per_g": 0.18,
+      "per_each": 22.14,
+      "g_each": null,
+      "ts": 1759775507
+    },
+    "potato": {
+      "per_g": 0.9299999999999999,
+      "per_each": 160.89,
+      "g_each": null,
+      "ts": 1759775507
+    },
+    "pepper": {
+      "per_g": 0.27666666666666667,
+      "per_each": 31.54,
+      "g_each": null,
+      "ts": 1759775507
+    },
+    "broccoli": {
+      "per_g": 0.35,
+      "per_each": 3.5,
+      "g_each": null,
+      "ts": 1759775508
+    },
+    "spinach": {
+      "per_g": 0.22999999999999998,
+      "per_each": 41.4,
+      "g_each": null,
+      "ts": 1759775508
+    },
+    "lettuce": {
+      "per_g": 0.17,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775508
+    },
+    "cucumber": {
+      "per_g": 0.15,
+      "per_each": 30.15,
+      "g_each": 201.0,
+      "ts": 1759775509
+    },
+    "apple": {
+      "per_g": 0.52,
+      "per_each": 94.64,
+      "g_each": null,
+      "ts": 1759775509
+    },
+    "mushroom": {
+      "per_g": 0.27999999999999997,
+      "per_each": 3.36,
+      "g_each": null,
+      "ts": 1759775509
+    },
+    "banana": {
+      "per_g": 0.89,
+      "per_each": 105.02,
+      "g_each": null,
+      "ts": 1759775510
+    },
+    "orange": {
+      "per_g": 0.48999999999999994,
+      "per_each": 8.329999999999998,
+      "g_each": 17.0,
+      "ts": 1759775510
+    },
+    "lemon": {
+      "per_g": 0.29,
+      "per_each": 24.36,
+      "g_each": null,
+      "ts": 1759775510
+    },
+    "lime": {
+      "per_g": 0.30000000000000004,
+      "per_each": 20.1,
+      "g_each": null,
+      "ts": 1759775510
+    },
+    "strawberry": {
+      "per_g": 0.32,
+      "per_each": 5.76,
+      "g_each": 18.0,
+      "ts": 1759775510
+    },
+    "vegetable oil": {
+      "per_g": 8.839705882352941,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775510
+    },
+    "canola oil": {
+      "per_g": 8.84,
+      "per_each": 123.76,
+      "g_each": null,
+      "ts": 1759775511
+    },
+    "peanut butter": {
+      "per_g": 5.88,
+      "per_each": 94.08,
+      "g_each": null,
+      "ts": 1759775511
+    },
+    "mayonnaise": {
+      "per_g": 6.8,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775511
+    },
+    "soy sauce": {
+      "per_g": 0.53,
+      "per_each": 8.48,
+      "g_each": null,
+      "ts": 1759775512
+    },
+    "ketchup": {
+      "per_g": 1.01,
+      "per_each": 17.17,
+      "g_each": null,
+      "ts": 1759775512
+    },
+    "honey": {
+      "per_g": 3.04,
+      "per_each": 63.84,
+      "g_each": null,
+      "ts": 1759775512
+    },
+    "vinegar": {
+      "per_g": 0.17986577181208055,
+      "per_each": 2.68,
+      "g_each": null,
+      "ts": 1759775513
+    },
+    "canned tomatoes": {
+      "per_g": 0.16,
+      "per_each": 26.240000000000002,
+      "g_each": 164.0,
+      "ts": 1759775513
+    },
+    "black bean": {
+      "per_g": 1.32,
+      "per_each": 227.04,
+      "g_each": null,
+      "ts": 1759775513
+    },
+    "chickpea": {
+      "per_g": 1.64,
+      "per_each": 268.96,
+      "g_each": null,
+      "ts": 1759775513
+    },
+    "chicken broth": {
+      "per_g": 0.06,
+      "per_each": 14.94,
+      "g_each": null,
+      "ts": 1759775513
+    },
+    "salt": {
+      "per_g": 0.0,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775514
+    },
+    "black pepper": {
+      "per_g": 2.508695652173913,
+      "per_each": 5.77,
+      "g_each": null,
+      "ts": 1759775514
+    },
+    "paprika": {
+      "per_g": 2.821739130434783,
+      "per_each": 6.49,
+      "g_each": null,
+      "ts": 1759775514
+    },
+    "cumin": {
+      "per_g": 3.7523809523809524,
+      "per_each": 7.88,
+      "g_each": null,
+      "ts": 1759775514
+    },
+    "oregano": {
+      "per_g": 2.65,
+      "per_each": 2.65,
+      "g_each": null,
+      "ts": 1759775515
+    },
+    "cinnamon": {
+      "per_g": 2.4692307692307693,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775515
+    },
+    "ginger": {
+      "per_g": 0.8,
+      "per_each": 1.6,
+      "g_each": null,
+      "ts": 1759775827
+    },
+    "chicken wings": {
+      "per_g": 3.2751026502426277,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775828
+    },
+    "fish sauce": {
+      "per_g": 0.35,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775829
+    },
+    "glutinous sweet rice": {
+      "per_g": 0.97,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775829
+    },
+    "salt and pepper": {
+      "per_g": 0.6857142857142856,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775830
+    },
+    "green onion": {
+      "per_g": 0.32,
+      "per_each": 8.0,
+      "g_each": 25.0,
+      "ts": 1759775831
+    },
+    "peanut oil": {
+      "per_g": 8.84,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775832
+    },
+    "shallot": {
+      "per_g": 0.7199623794968257,
+      "per_each": 30.62,
+      "g_each": null,
+      "ts": 1759775832
+    },
+    "white onion": {
+      "per_g": 0.44,
+      "per_each": 41.36,
+      "g_each": 94.0,
+      "ts": 1759775833
+    },
+    "ginger garlic paste": {
+      "per_g": 3.181676210307131,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775834
+    },
+    "lemon juice": {
+      "per_g": 0.16999999999999998,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775834
+    },
+    "garam masala": {
+      "per_g": 3.1564625850340136,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775835
+    },
+    "chili powder": {
+      "per_g": 2.8185185185185184,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775836
+    },
+    "tomato puree": {
+      "per_g": 0.38,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775836
+    },
+    "half-and-half": {
+      "per_g": 1.23,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775837
+    },
+    "plain yogurt": {
+      "per_g": 0.63,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775838
+    },
+    "pinch salt and black pepper": {
+      "per_g": 2.508695652173913,
+      "per_each": 5.77,
+      "g_each": null,
+      "ts": 1759775838
+    },
+    "cayenne pepper": {
+      "per_g": 3.1777777777777776,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775840
+    },
+    "cornstarch": {
+      "per_g": 3.81,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775849
+    },
+    "water": {
+      "per_g": 0.0,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775850
+    },
+    "garlic powder": {
+      "per_g": 3.3096774193548386,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775850
+    },
+    "seasoned bread crumbs": {
+      "per_g": 3.83,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775851
+    },
+    "all-purpose flour": {
+      "per_g": 3.64,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775852
+    },
+    "oil": {
+      "per_g": 8.84,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775854
+    },
+    "saltine crackers": {
+      "per_g": 4.18,
+      "per_each": 12.54,
+      "g_each": null,
+      "ts": 1759775854
+    },
+    "dry potato flakes": {
+      "per_g": 0.9299999999999999,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775855
+    },
+    "seasoned salt": {
+      "per_g": 0.5166666666666667,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775856
+    },
+    "can condensed cream of chicken soup": {
+      "per_g": 0.9,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775856
+    },
+    "margarine": {
+      "per_g": 7.169718309859156,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775857
+    },
+    "cooked chicken breast": {
+      "per_g": 1.65,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775858
+    },
+    "can green chile peppers": {
+      "per_g": 0.4,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775858
+    },
+    "flour tortillas": {
+      "per_g": 3.25,
+      "per_each": 159.25,
+      "g_each": null,
+      "ts": 1759775859
+    },
+    "baking powder": {
+      "per_g": 0.5304347826086957,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775907
+    },
+    "beer": {
+      "per_g": 0.43000000000000005,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775911
+    },
+    "jalapeño pepper": {
+      "per_g": 0.29,
+      "per_each": 4.06,
+      "g_each": null,
+      "ts": 1759775917
+    },
+    "capers": {
+      "per_g": 0.2302325581395349,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775921
+    },
+    "dried oregano": {
+      "per_g": 2.65,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775927
+    },
+    "dried dill weed": {
+      "per_g": 2.53,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775932
+    },
+    "quart oil": {
+      "per_g": 8.84,
+      "per_each": 7920.64,
+      "g_each": null,
+      "ts": 1759775935
+    },
+    "cod fillets": {
+      "per_g": 1.05,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775941
+    },
+    "package corn tortillas": {
+      "per_g": 2.18,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775946
+    },
+    "head cabbage": {
+      "per_g": 0.22999999999999998,
+      "per_each": 290.26,
+      "g_each": null,
+      "ts": 1759775950
+    },
+    "mushrooms": {
+      "per_g": 0.27999999999999997,
+      "per_each": 3.36,
+      "g_each": null,
+      "ts": 1759775952
+    },
+    "stalk celery": {
+      "per_g": 0.15993057277460948,
+      "per_each": 6.45,
+      "g_each": null,
+      "ts": 1759775959
+    },
+    "chicken stock": {
+      "per_g": 0.36000000000000004,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775962
+    },
+    "potatoes": {
+      "per_g": 0.9299999999999999,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775962
+    },
+    "cod": {
+      "per_g": 1.05,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775970
+    },
+    "clam juice": {
+      "per_g": 0.02,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775978
+    },
+    "old bay seasoning": {
+      "per_g": 1.1833333333333333,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775982
+    },
+    "salt and black pepper": {
+      "per_g": 2.508695652173913,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759775999
+    },
+    "cans evaporated milk": {
+      "per_g": 1.3399999999999999,
+      "per_each": 494.46,
+      "g_each": null,
+      "ts": 1759776002
+    },
+    "cooked crumbled bacon": {
+      "per_g": 4.680000000000001,
+      "per_each": 53.82000000000001,
+      "g_each": 11.5,
+      "ts": 1759776010
+    },
+    "dry mustard": {
+      "per_g": 5.08,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759776025
+    },
+    "white pepper": {
+      "per_g": 2.9583333333333335,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759776034
+    },
+    "dried thyme": {
+      "per_g": 2.757142857142857,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759776041
+    },
+    "fillets trout": {
+      "per_g": 1.9,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759776042
+    },
+    "dijon mustard": {
+      "per_g": 0.5777777777777777,
+      "per_each": 3.12,
+      "g_each": 5.4,
+      "ts": 1759776048
+    },
+    "white fish fillets": {
+      "per_g": 1.09,
+      "per_each": 173.31,
+      "g_each": null,
+      "ts": 1759776053
+    },
+    "ginger root": {
+      "per_g": 0.8,
+      "per_each": 1.6,
+      "g_each": null,
+      "ts": 1759776058
+    },
+    "cashew halves": {
+      "per_g": 5.70886075949367,
+      "per_each": 9.02,
+      "g_each": null,
+      "ts": 1759776062
+    },
+    "cilantro": {
+      "per_g": 2.783333333333333,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759776064
+    },
+    "white sugar": {
+      "per_g": 3.8714285714285714,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759776065
+    }
+  }
+}
