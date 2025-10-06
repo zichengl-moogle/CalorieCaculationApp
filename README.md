@@ -36,7 +36,6 @@ The project emphasizes *pragmatic accuracy* (looks reasonable) and *responsivene
 Our app relies on the **Walmart engine from SerpAPI**, which is essentially a **third-party web-scraping API** rather than an official Walmart data interface.  
 As a result:
 
-- The price retrieval process can be **very slow (up to 3 minutes or longer)** depending on API rate limits and network latency.  
 - We use a **free-tier API key**, meaning the daily quota is extremely limited — typically **2–3 successful uses of app per day**.  
 - Once the quota is exhausted, subsequent price or calorie calculations will **return 0** until the quota resets.  
 

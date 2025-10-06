@@ -162,8 +162,14 @@ def parse_ppu(ppu) -> tuple[float, str]:
     return (0.0, "g")
 
 _CACHE_LOCK = threading.Lock()
-_CACHE_FILE = Path(".cache_walmart.json")
+from pathlib import Path
 
+# Locate current script’s directory (module folder)
+MODULE_DIR = Path(__file__).resolve().parent
+CACHE_DIR = MODULE_DIR / "cache"
+CACHE_DIR.mkdir(parents=True, exist_ok=True)  # ensure folder exists
+
+_CACHE_FILE = CACHE_DIR / ".cache_walmart.json"
 
 def _cache_read() -> dict:
     if _CACHE_FILE.exists():
@@ -215,50 +221,122 @@ def get_prices_parallel(names: list[str], max_workers: int = 8) -> dict[str, tup
 
     return results
 
-@lru_cache(maxsize=256)   # <<< NEW: cache the results of each query
+@lru_cache(maxsize=256)
 def search_walmart(ingredient: str):
-    """
-    Return tuple (price, unit):
-      - (USD per gram, "g") if priced by weight
-      - (USD per each, "each") if priced by each
-      - else (0.0, "g")
-    """
+    k = (ingredient or "").strip().lower()
+
+    # ① Read disk cache first
+    try:
+        cache = _cache_read()
+        hit = cache.get(k)
+        if hit:
+            return (float(hit[0]), str(hit[1]))
+    except Exception:
+        pass
+
+    # ② Live fetch with better unit preference
     try:
         print("Start Walmart search for:", ingredient)
-        resp = serpapi_walmart_search(ingredient, num=1)
-        # print("Raw API response:", json.dumps(resp, indent=2)[:2000], "...\n")
+        resp = serpapi_walmart_search(k, num=1)
         item = extract_first_item(resp)
         if not item:
-            return (0.0, "g")
+            result = (0.0, "g")
+        else:
+            price = item["price"]                # total $ for the product (if present)
+            title = item["title"] or ""
+            size_str = item["size_str"] or ""
+            text = f"{title} {size_str}".lower()
 
-        price = item["price"]
-        title = item["title"]
-        size_str = item["size_str"]
+            # Parse PPU ($/unit) first
+            ppu_val, ppu_unit = parse_ppu(item["ppu_raw"])  # e.g. ($0.58, "each") or ($/g)
 
-        # If title/spec indicates each/ea and there is a total price → treat as each
-        if price is not None:
-            text_for_each = f"{title} {size_str}".lower()
-            if re.search(r"\b(ea|each|count)\b", text_for_each):
-                return (price, "each")
-        # prices_walmart.py —— add the following validation around returning $/g inside search_walmar
+            # A) If PPU clearly says "each", prefer that.
+            if ppu_unit == "each" and ppu_val and ppu_val > 0:
+                result = (float(ppu_val), "each")
 
-        # If weight and total price exist → $/g
-        # If weight and total price exist → $/g
-        weight_g = parse_weight_to_g(size_str or title)
-        if price is not None and weight_g > 0:
-            pg = float(price) / weight_g
-            return (pg, "g")
+            # B) Else if title/spec implies per-each and we have a total price → treat as each.
+            elif price is not None and re.search(r"\b(ea|each|count)\b", text):
+                result = (float(price), "each")
 
-        # fallback to price per unit (ppu)
-        val, unit = parse_ppu(item["ppu_raw"])
-        return (val, unit)
-
-
+            else:
+                # Try weight-based: if we know total price and we can parse total grams.
+                weight_g = parse_weight_to_g(size_str or title)
+                if price is not None and weight_g > 0:
+                    result = (float(price) / float(weight_g), "g")
+                elif ppu_val and ppu_val > 0:
+                    # Fallback to whatever PPU gave us (could be g via oz/lb, etc.)
+                    result = (float(ppu_val), str(ppu_unit))
+                else:
+                    result = (0.0, "g")
     except Exception:
-        return (0.0, "g")
+        result = (0.0, "g")
+
+    # ③ Write back to disk cache
+    try:
+        cache = _cache_read()
+        cache[k] = [float(result[0]), str(result[1])]
+        _cache_write(cache)
+    except Exception:
+        pass
+
+    return result
+
 
 
 if __name__ == "__main__":
-    for q in ["olive oil "]:
-        price, unit = search_walmart(q)
-        print(f"{q}: {price:.6f} USD/{unit}")
+    """
+    Run this file directly to pre-fill Walmart cache with common ingredients.
+    This will:
+      - Load or create .cache_walmart.json
+      - Query Walmart (via SerpAPI) for each ingredient if not cached
+      - Save results to disk
+    """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    # Common ingredients list — feel free to modify or expand
+    common_items = [
+        # Proteins
+        "egg", "chicken breast", "ground beef", "bacon", "salmon",
+        "shrimp", "pork loin", "tofu",
+        # Dairy
+        "milk", "butter", "cheddar cheese", "yogurt", "cream cheese",
+        "parmesan cheese",
+        # Oils & condiments
+        "olive oil", "vegetable oil", "soy sauce", "ketchup", "mayonnaise",
+        # Vegetables
+        "onion", "garlic", "carrot", "potato", "tomato", "bell pepper",
+        "broccoli", "spinach", "lettuce", "cucumber",
+        # Fruits
+        "apple", "banana", "orange", "lemon", "lime", "strawberry",
+        # Grains
+        "rice", "flour", "bread", "spaghetti", "oats",
+        # Canned / packaged
+        "canned tomatoes", "black beans", "chicken broth", "coconut milk",
+        # Spices
+        "salt", "black pepper", "cumin", "paprika", "oregano", "cinnamon",
+    ]
+
+    # Read existing cache from disk
+    cache = _cache_read()
+    to_fetch = [i for i in common_items if i.lower() not in cache]
+    print(f"[INIT] Walmart cache path: {_CACHE_FILE.resolve()}")
+    print(f"[INIT] Existing entries: {len(cache)} | Need to fetch: {len(to_fetch)}")
+
+    if not to_fetch:
+        print("[INFO] All common items already cached ✅")
+    else:
+        with ThreadPoolExecutor(max_workers=8) as ex:
+            futures = {ex.submit(search_walmart, item): item for item in to_fetch}
+            for fut in as_completed(futures):
+                name = futures[fut]
+                try:
+                    price, unit = fut.result()
+                    print(f"[OK] {name:20s} -> {price:.6f} USD/{unit}")
+                    cache[name.lower()] = [price, unit]
+                except Exception as e:
+                    print(f"[FAIL] {name:20s} -> {e}")
+
+        _cache_write(cache)
+        print(f"[DONE] Cache updated. Total entries: {len(cache)} ✅")
+
+
