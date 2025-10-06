@@ -58,8 +58,8 @@ from pathlib import Path
 import requests
 from functools import lru_cache   # <<< NEW
 
-# API_KEY = "043b5ae44adbd3774c83f2d925e62080ab6eadceb3fa72cf626fb937b1b40f51"
-API_KEY ="1088c206cc37fa9748c2f252f37f21b38cef9ab74aa81e1f2919cd1be9dee55b"
+API_KEY = "043b5ae44adbd3774c83f2d925e62080ab6eadceb3fa72cf626fb937b1b40f51"
+# API_KEY ="1088c206cc37fa9748c2f252f37f21b38cef9ab74aa81e1f2919cd1be9dee55b"
 SEARCH_URL = "https://serpapi.com/search.json"
 
 

@@ -726,6 +726,102 @@
       "per_each": null,
       "g_each": null,
       "ts": 1759776065
+    },
+    "sweet potato": {
+      "per_g": 0.8999999999999999,
+      "per_each": 161.99999999999997,
+      "g_each": 180.0,
+      "ts": 1759789936
+    },
+    "eggs": {
+      "per_g": 1.43,
+      "per_each": 71.5,
+      "g_each": 50.0,
+      "ts": 1759789936
+    },
+    "stalks celery": {
+      "per_g": 0.15993057277460948,
+      "per_each": 6.45,
+      "g_each": null,
+      "ts": 1759789936
+    },
+    "mustard": {
+      "per_g": 0.6,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789937
+    },
+    "celery": {
+      "per_g": 0.16,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789937
+    },
+    "sweet pickle relish": {
+      "per_g": 1.3,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789937
+    },
+    "garlic salt": {
+      "per_g": 0.8928571428571429,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789937
+    },
+    "celery salt": {
+      "per_g": 0.9714285714285714,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789937
+    },
+    "baking potato": {
+      "per_g": 0.97,
+      "per_each": 167.81,
+      "g_each": null,
+      "ts": 1759789937
+    },
+    "pinch freshly black pepper": {
+      "per_g": 2.5384615384615383,
+      "per_each": 0.33,
+      "g_each": null,
+      "ts": 1759789937
+    },
+    "bacon": {
+      "per_g": 4.680000000000001,
+      "per_each": 53.82000000000001,
+      "g_each": 11.5,
+      "ts": 1759789938
+    },
+    "white vinegar": {
+      "per_g": 0.17986577181208055,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789938
+    },
+    "parsley": {
+      "per_g": 0.36052631578947375,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789938
+    },
+    "heavy cream": {
+      "per_g": 3.4,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789938
+    },
+    "dried tarragon": {
+      "per_g": 2.9499999999999997,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789938
+    },
+    "salt and freshly black pepper": {
+      "per_g": 2.508695652173913,
+      "per_each": null,
+      "g_each": null,
+      "ts": 1759789938
     }
   }
 }
