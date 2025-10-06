@@ -3,7 +3,7 @@
 main.py — Primary entry point for Final Project
 ===============================================================================
 
-Author: Liu Zicheng (zichengl)
+Author: Zicheng Liu (zichengl)
 Team Name: Smart Bite
 Course: Heinz College — Python Programming for Information Systems
 Institution: Carnegie Mellon University
