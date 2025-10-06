@@ -1,4 +1,49 @@
-# datasets.py
+"""
+===============================================================================
+datasets.py — Core data models (Recipe & Ingredient)
+===============================================================================
+
+Author: Zicheng Liu (zichengl)
+Team Name: Smart Bite
+Course: Heinz College — Python Programming for Information Systems
+Institution: Carnegie Mellon University
+Semester: Fall 2025
+
+-------------------------------------------------------------------------------
+Purpose:
+    Defines the core dataclasses used across the Calorie & Cost Finder project:
+        • Ingredient — standardized ingredient representation (in grams)
+        • Recipe — structured recipe entity with per-serving context
+
+Design Principles:
+    • Consistent internal units (grams) to simplify nutrition and cost math.
+    • Type-safe structure using Python dataclasses.
+    • Minimal, dependency-free core that other modules (scraper, price, nutrition)
+      can import without circular dependencies.
+
+-------------------------------------------------------------------------------
+Fields:
+    Ingredient:
+        - name (str): canonical ingredient name
+        - quantity_g (float): mass in grams
+        - price_per_g (float): cost per gram (default 0.0)
+        - meta (dict): debug or provenance metadata
+
+    Recipe:
+        - id (str): stable identifier (hash or composite key)
+        - title (str): recipe title
+        - url (str): recipe source URL
+        - servings (int): number of servings
+        - ingredients (List[Ingredient]): all converted to grams
+
+-------------------------------------------------------------------------------
+Notes:
+    • No external dependencies beyond Python standard library.
+    • Conversion from volume/imperial units is handled upstream by scraper modules.
+    • Provides a `to_dict()` method for JSON serialization in downstream analysis.
+
+===============================================================================
+"""
 from dataclasses import dataclass, field
 from typing import List, Dict
 

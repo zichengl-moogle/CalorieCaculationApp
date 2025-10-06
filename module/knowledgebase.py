@@ -1,7 +1,45 @@
-# knowledgebase.py
-# Common ingredient alias mapping: different ways to say the SAME food.
-# Rule: map every alias -> a canonical name (lowercase).
-# No typo handling; only legitimate alternative names/regions/phrases.
+"""
+===============================================================================
+knowledgebase.py — Ingredient synonym dictionary
+===============================================================================
+
+Author: Zicheng Liu (zichengl)
+Team Name: Smart Bite
+Course: Heinz College — Python Programming for Information Systems
+Institution: Carnegie Mellon University
+Semester: Fall 2025
+
+-------------------------------------------------------------------------------
+Purpose:
+    Centralizes ingredient name normalization across all data sources
+    (recipes, Walmart prices, and Nutritionix nutrition data).
+    Provides a consistent mapping of alternate or regional ingredient names
+    to canonical English terms used throughout the system.
+
+-------------------------------------------------------------------------------
+Contents:
+    • SYNONYMS — a dictionary mapping alias → canonical form.
+        Example:  "scallions" → "green onion"
+                  "aubergine" → "eggplant"
+                  "yoghurt"   → "yogurt"
+
+    • CANONICAL_PREFERENCES — a reference set of standardized names
+      that represent preferred spellings within this project.
+
+-------------------------------------------------------------------------------
+Design Principles:
+    • Keep mappings one-directional (alias → canonical).
+    • No typo or fuzzy handling; only legitimate linguistic / regional variants.
+    • All keys and values are lowercase for consistency.
+    • Used by the Nutritionix and recipe modules for normalization.
+
+-------------------------------------------------------------------------------
+Notes:
+    • This module has no dependencies and may be safely imported anywhere.
+    • Add new entries here when encountering alternative ingredient terms.
+
+===============================================================================
+"""
 
 SYNONYMS = {
     # onions & herbs

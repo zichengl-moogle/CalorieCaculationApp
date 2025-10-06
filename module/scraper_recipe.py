@@ -1,4 +1,51 @@
-# scraper_recipe.py - enhanced version (each support + pre-scan weight + main outputs meta)
+"""
+===============================================================================
+scraper_recipe.py — Recipe Scraping and Ingredient Parsing Module
+===============================================================================
+
+Author: Lanshun Yuan (lanshuny)
+Team Name: Smart Bite
+Course: Heinz College — Python Programming for Information Systems
+Institution: Carnegie Mellon University
+Semester: Fall 2025
+
+-------------------------------------------------------------------------------
+Purpose:
+    This module handles all recipe-related data acquisition and preprocessing.
+    It connects to the Allrecipes website, retrieves recipe pages, and extracts
+    structured ingredient and metadata information for downstream use.
+
+    Key responsibilities:
+        • Perform query-based recipe search and result URL extraction
+        • Parse recipe pages into structured `Recipe` and `Ingredient` objects
+        • Normalize ingredient units and handle both weight- and count-based items
+        • Estimate gram weights for various units and common ingredient types
+        • Apply heuristic density conversions (e.g., oil, rice, sugar)
+        • Support “each”-based measurements (e.g., eggs, cloves, slices)
+        • Detect and skip optional or approximate ingredients
+        • Provide per-ingredient meta information for caching and analysis
+
+-------------------------------------------------------------------------------
+Inputs / Outputs:
+    Input  → Allrecipes.com search results and recipe detail pages
+    Output → List[Recipe] objects, each containing a list of Ingredient objects
+              (used later by price and nutrition modules)
+
+-------------------------------------------------------------------------------
+Dependencies:
+    - requests, BeautifulSoup4
+    - dataclasses, re, json, hashlib, time, random
+    - Internal modules: none (stand-alone component)
+
+-------------------------------------------------------------------------------
+Notes:
+    • All scraping is lightweight, respectful, and non-intrusive for educational use.
+    • Includes fallback DOM parsers and regex-based normalization for robustness.
+    • Designed to work fully offline once recipes are cached locally.
+    • No absolute paths or auto-installation; all dependencies installed manually.
+
+===============================================================================
+"""
 from __future__ import annotations
 import re, json, time, random, hashlib
 from typing import List, Optional, Dict, Tuple

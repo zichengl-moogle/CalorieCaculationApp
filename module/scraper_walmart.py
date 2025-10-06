@@ -1,11 +1,53 @@
-# prices_walmart.py
 """
-Fetch Walmart ingredient price using SerpAPI.
-- Input: ingredient string
-- Output: tuple (price, unit):
-    - if priced by weight: (USD per gram, "g")
-    - if priced by each: (USD per each, "each")
-    - else: (0.0, "g")
+===============================================================================
+prices_walmart.py — Walmart pricing via SerpAPI (disk + LRU cache)
+===============================================================================
+
+Author: Yipeng Sun (yipengs)
+Team Name: Smart Bite
+Course: Heinz College — Python Programming for Information Systems
+Institution: Carnegie Mellon University
+Semester: Fall 2025
+
+-------------------------------------------------------------------------------
+Purpose:
+    Query Walmart product data through SerpAPI and normalize an ingredient's
+    price into either:
+        • (USD per gram, "g") for weight-based items, or
+        • (USD per each, "each") for count-based items.
+    Provides resilient parsing (title/size/PPU), and persistent caching.
+
+Key Features:
+    • Cross-run disk cache  → module/cache/.cache_walmart.json
+    • In-process LRU cache  → @lru_cache for repeated calls
+    • Unit resolution order:
+        1) Prefer PPU "/each" if present
+        2) Else title/spec contains "each/count" with total price → each
+        3) Else derive $/g from total price ÷ parsed weight
+        4) Else fallback to parsed PPU (oz/lb/kg/fl oz → g)
+    • Parallel prefetch via __main__ to warm cache for common items
+
+-------------------------------------------------------------------------------
+Inputs / Outputs:
+    Input :
+        - ingredient name (str), free text
+    Output:
+        - tuple (price: float, unit: str) where unit ∈ {"g", "each"}
+        - Updated on-disk cache for future runs
+
+-------------------------------------------------------------------------------
+Dependencies:
+    - requests
+    - functools.lru_cache
+    - Standard library: json, re, threading, concurrent.futures, pathlib
+
+-------------------------------------------------------------------------------
+Notes:
+    • No absolute paths; cache lives under module/cache/.
+    • No auto-installation; install manually via: pip install -r requirements.txt
+    • The __main__ section can be run to pre-fill the cache with common items.
+
+===============================================================================
 """
 
 import re

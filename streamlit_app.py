@@ -1,9 +1,50 @@
-# streamlit run streamlit_app.py
+"""
+===============================================================================
+streamlit_app.py — Streamlit UI for Calorie & Cost Finder
+===============================================================================
+
+Author: Zicheng Liu (zichengl)
+Team Name: Smart Bite
+Course: Heinz College — Python Programming for Information Systems
+Institution: Carnegie Mellon University
+Semester: Fall 2025
+
+-------------------------------------------------------------------------------
+Purpose:
+    Streamlit front-end that wraps the project pipeline for interactive use.
+    It lets users enter a dish query, runs the end-to-end pipeline
+    (recipes → Walmart prices → Nutritionix calories), and displays:
+        • Per-serving kcal and cost
+        • Ingredient-level breakdown with unit prices and notes
+    The app calls `run_once(query)` from `main.py` to generate results.
+
+-------------------------------------------------------------------------------
+How to Run:
+    Preferred:
+        streamlit run streamlit_app.py
+    Also supported (via main entry):
+        python main.py   # programmatically launches Streamlit
+
+-------------------------------------------------------------------------------
+Dependencies:
+    - streamlit
+    - The project's internal modules (imported via `main.run_once`)
+    - Standard library: os, sys, json
+
+-------------------------------------------------------------------------------
+Notes:
+    • No auto-install; install manually via: `pip install -r requirements.txt`
+    • Uses session_state to navigate: "home" → "waiting" → "results"
+    • All paths are relative to the project root (no absolute paths)
+    • Safe defaults for empty/failed results, so the UI won’t crash
+
+===============================================================================
+"""
 import json
 import os
 import sys
 
-from runner import run_once  # run_once(query: str, top_k: int = 5)
+from main import run_once  # run_once(query: str, top_k: int = 5)
 
 def _is_streamlit_runtime() -> bool:
     try:

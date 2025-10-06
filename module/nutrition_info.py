@@ -1,20 +1,53 @@
 """
-Nutritionix client with disk caching and mode control.
+===============================================================================
+nutritionix_client.py — Nutritionix client with disk + LRU caching
+===============================================================================
 
-Features:
-- Disk cache (cross-run) + LRU cache (in-process).
-- Modes:
-    - "offline": use disk cache only, never hit API.
-    - "auto":    use cache when valid; fetch missing/expired and write back.
-    - "refresh": force API for provided keys and overwrite cache.
-- Friendly alias normalization via knowledgebase.SYNONYMS (optional).
-- Drop-in replacements for:
-    - kcal_per_gram(name, mode="auto")
-    - kcal_per_each(name, mode="auto")
-    - grams_per_each(name, mode="auto")
-    - batch_kcal_cached(names, prefer_each=None, mode="auto")
+Authors:
+    - Zicheng Liu (zichengl)
+    - Anastasia Harouse (aharouse)
+Team Name: Smart Bite
+Course: Heinz College — Python Programming for Information Systems
+Institution: Carnegie Mellon University
+Semester: Fall 2025
 
-Dependencies: requests, python-dotenv (optional), functools.lru_cache
+-------------------------------------------------------------------------------
+Purpose:
+    Provides a robust client for Nutritionix "natural language" nutrients API,
+    with cross-run disk cache, in-process LRU cache, and explicit mode control:
+        • offline  – use only disk cache, never hit API
+        • auto     – use cache when valid, fetch and persist when missing/expired
+        • refresh  – force API and overwrite cache
+    Exposes drop-in helpers:
+        - kcal_per_gram(name, mode="auto")
+        - grams_per_each(name, mode="auto")
+        - kcal_per_each(name, mode="auto")
+        - batch_kcal_cached(names, prefer_each=None, mode="auto")
+
+-------------------------------------------------------------------------------
+Inputs / Outputs:
+    Inputs:
+        - Ingredient names (strings), optionally normalized via knowledgebase
+        - API credentials via environment variables (.env supported)
+    Outputs:
+        - Per-ingredient kcal/g, kcal/each, and grams/each
+        - On-disk JSON cache at module/cache/.cache_nutritionix.json
+
+-------------------------------------------------------------------------------
+Dependencies:
+    - requests
+    - python-dotenv (optional; safe if missing)
+    - functools.lru_cache
+    - Standard library: os, re, json, time, pathlib, typing
+
+-------------------------------------------------------------------------------
+Notes:
+    • No absolute paths; cache stored relative to this module.
+    • No auto-installation of packages (per course rubric).
+    • Designed to be resilient: graceful fallbacks and diagnostics included.
+    • When run as a script, it can prefetch a common-ingredients set to warm cache.
+
+===============================================================================
 """
 
 from __future__ import annotations
