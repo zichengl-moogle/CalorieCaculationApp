@@ -5,7 +5,7 @@ streamlit_app.py — Streamlit UI for Calorie & Cost Finder
 
 Author: Zicheng Liu (zichengl)
 Team Name: Smart Bite
-Course: Heinz College — Python Programming for Information Systems
+Course: Heinz College — Data Focused Python
 Institution: Carnegie Mellon University
 Semester: Fall 2025
 

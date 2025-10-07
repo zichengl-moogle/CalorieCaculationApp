@@ -5,7 +5,7 @@ prices_walmart.py — Walmart pricing via SerpAPI (disk + LRU cache)
 
 Author: Yipeng Sun (yipengs)
 Team Name: Smart Bite
-Course: Heinz College — Python Programming for Information Systems
+Course: Heinz College — Data Focused Python
 Institution: Carnegie Mellon University
 Semester: Fall 2025
 

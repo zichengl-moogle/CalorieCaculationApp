@@ -5,7 +5,7 @@ scraper_recipe.py — Recipe Scraping and Ingredient Parsing Module
 
 Author: Lanshun Yuan (lanshuny)
 Team Name: Smart Bite
-Course: Heinz College — Python Programming for Information Systems
+Course: Heinz College — Data Focused Python
 Institution: Carnegie Mellon University
 Semester: Fall 2025
 
